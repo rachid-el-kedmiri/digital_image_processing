@@ -1,7 +1,33 @@
-from matplotlib  import pyplot as plt
+from matplotlib      import pyplot as plt
 from collections.abc import Iterable
+from os              import path
+from datetime        import datetime
+from IPython.display import Image
+
 import cv2   as cv
 import numpy as np
+import re
+
+
+def show_image(image):
+    """
+    Stores first a version in the hard drive with a name generated from the current
+    timestamp, then display it using jupyter builtin function Image
+    """
+    current_timestamp = datetime.now()
+    extension = '.jpg' # auto handled by opencv.
+    filename = re.sub(r'\D', '_', str(current_timestamp)) + extension
+    temporary_directory = 'temporary_pics'
+    file_path = path.join('.', temporary_directory, filename)
+    cv.imwrite(file_path, image)
+    return Image(file_path)
+
+
+def load_image(filename):
+    pics_directory = 'pics'
+    # for portable code between different platforms.
+    file_path = path.join(pics_directory, filename)
+    return cv.imread(file_path, 0)
 
 
 def show_image_with_histogram(images, show_cdf=False):
